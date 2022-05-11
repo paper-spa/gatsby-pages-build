@@ -1,0 +1,28 @@
+name: 'Gatsby pages build'
+description: 'An action that builds your Gatsby site for GitHub Pages using npm'
+inputs:
+  node-version:
+    description: 'The version of node'
+    required: true
+    default: '16'
+runs:
+  using: "composite"
+  steps:      
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        
+    - name: cache gatsby site build
+      id: gatsby-cache-build
+      uses: actions/cache@v2
+      with:
+        path: |
+          public
+          .cache
+        key: ${{ runner.os }}-gatsby-build-${{ hashFiles('public') }}
+        restore-keys: |
+          ${{ runner.os }}-gatsby-build-
+
+    - run: npm ci
+    - run: npm run build --if-present
