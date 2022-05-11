@@ -25,4 +25,6 @@ runs:
           ${{ runner.os }}-gatsby-build-
 
     - run: npm ci
+      shell: bash
     - run: npm run build --if-present
+      shell: bash
