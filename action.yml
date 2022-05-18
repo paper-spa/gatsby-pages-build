@@ -1,5 +1,5 @@
 name: 'Gatsby pages build'
-description: 'An action that builds your Gatsby site for GitHub Pages using npm'
+description: 'An action that builds your Gatsby site for GitHub Pages using npm or yarn'
 inputs:
   node-version:
     description: 'The version of node'
