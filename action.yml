@@ -11,20 +11,18 @@ runs:
   steps:     
     - name: Check package manager
       id: check-package-manager
-      run: |
-        [ -f "${{ github.workspace }}/yarn.lock" ] && YARN=true || YARN=false
-        [ -f "${{ github.workspace }}/package-lock.json" ] && NPM=true || NPM=false
-        
-        if [ "$YARN"=="true" ]; then
+      run: |        
+        if [ -f "${{ github.workspace }}/yarn.lock" ]; then
           echo "::set-output name=manager::yarn"
           echo "::set-output name=command::install"
           exit 0
-        fi
-        
-        if [ "$NPM"=="true" ]; then
+        elif [  -f "${{ github.workspace }}/package-lock.json" ]; then
           echo "::set-output name=manager::npm"
           echo "::set-output name=command::ci"
           exit 0
+        else
+          echo "Unable to determine packager manager"
+          exit 1
         fi
         
       shell: bash
