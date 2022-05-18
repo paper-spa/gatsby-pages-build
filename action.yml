@@ -5,13 +5,34 @@ inputs:
     description: 'The version of node'
     required: true
     default: '16'
+    
 runs:
   using: "composite"
-  steps:      
+  steps:     
+    - name: Check package manager
+      id: check-package-manager
+      run: |
+        [ -f "$BUILD_DIR/yarn.lock" ] && YARN=true || YARN=false
+        [ -f "$BUILD_DIR/package-lock.json" ] && NPM=true || NPM=false
+        
+        if [[ "$YARN"=="true"]]; then
+          echo "::set-output name=manager::yarn"
+          echo "::set-output name=command::install"
+          exit 0
+        fi
+        
+        if [[ "$NPM"=="true" ]]; then
+          echo "::set-output name=manager::npm"
+          echo "::set-output name=command::ci"
+          exit 0
+        fi
+        
+      shell: bash
+        
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ inputs.node-version }}
-        cache: 'npm'
+        cache: ${{ steps.check-package-manager.outputs.manager }}
         
     - name: cache gatsby site build
       id: gatsby-cache-build
@@ -24,7 +45,8 @@ runs:
         restore-keys: |
           ${{ runner.os }}-gatsby-build-
 
-    - run: npm ci
+    - run: ${{ steps.check-package-manager.outputs.manager }} ${{ steps.check-package-manager.outputs.command }}
       shell: bash
-    - run: npm run build --if-present
+      
+    - run: ${{ steps.check-package-manager.outputs.manager }} run build --if-present
       shell: bash
