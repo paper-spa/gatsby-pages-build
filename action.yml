@@ -15,13 +15,13 @@ runs:
         [ -f "${{ github.workspace }}/yarn.lock" ] && YARN=true || YARN=false
         [ -f "${{ github.workspace }}/package-lock.json" ] && NPM=true || NPM=false
         
-        if [[ "$YARN"=="true"]]; then
+        if [ "$YARN"=="true" ]; then
           echo "::set-output name=manager::yarn"
           echo "::set-output name=command::install"
           exit 0
         fi
         
-        if [[ "$NPM"=="true" ]]; then
+        if [ "$NPM"=="true" ]; then
           echo "::set-output name=manager::npm"
           echo "::set-output name=command::ci"
           exit 0
