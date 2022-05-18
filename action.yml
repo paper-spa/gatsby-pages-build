@@ -12,8 +12,8 @@ runs:
     - name: Check package manager
       id: check-package-manager
       run: |
-        [ -f "$BUILD_DIR/yarn.lock" ] && YARN=true || YARN=false
-        [ -f "$BUILD_DIR/package-lock.json" ] && NPM=true || NPM=false
+        [ -f "${{ github.workspace }}/yarn.lock" ] && YARN=true || YARN=false
+        [ -f "${{ github.workspace }}/package-lock.json" ] && NPM=true || NPM=false
         
         if [[ "$YARN"=="true"]]; then
           echo "::set-output name=manager::yarn"
